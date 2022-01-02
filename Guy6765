@@ -1,0 +1,379 @@
+# - * - кодировка: utf-8 - * -
+from  datetime  import  datetime , timedelta
+ время импорта
+импорт  вк
+ запросы на импорт
+ случайный импорт
+import  sys
+из  colorama  import  init
+импортная  колорама
+от  Os  импорта  системы , имя
+импорт  ОС
+init ( autoreset = True )
+
+
+
+ цвет класса :
+    Красный  =  ' \ 033 [91 м'
+    Зеленый  =  ' \ 033 [1; 32 м'
+    Желтый  =  ' \ 033 [93 м'
+    Синий  =  ' \ 033 [94 м'
+    Пурпурный  =  ' \ 033 [95 м'
+    Голубой  =  ' \ 033 [96 м'
+    Белый  =  ' \ 033 [97 м'
+    Серый  =  ' \ 033 [90 м'
+    ЖИРНЫЙ  =  ' \ 033 [1 м'
+    ITALIC  =  ' \ 033 [3 м'
+    ПОДЛИНЕЙ  =  ' \ 033 [4 м'
+    КОНЕЦ  =  ' \ 033 [0 мин.'
+
+
+    
+# определяем нашу четкую функцию
+def  clear ():
+
+    # для windows
+    если  name  ==  'nt' :
+        _  =  система ( 'cls' )
+
+    # для mac и linux (здесь os.name - posix)
+    еще :
+        _  =  система ( 'очистить' )
+
+
+#vars
+цвет . Голубой
+
+цвет . КОНЕЦ
+бесконечный  =  3
+token_passed  =  0
+menu  =  str ( color . Green  +  '['  +  color . Yellow  +  '1'  +  color . Green  +  '] Поиск пользователя по ID ['  +  color . Yellow  +  '2'  +  color . Green  +  '] Информация о текущем пользователе \ n [' +  цвет . Желтый  +  ' 3 '  +  цвет . Зеленый  +  '] Скачать диалоги ['  +  цвет. Желтый  +  «4»  +  цвет . Зеленый  +  '] Скачать вложения из диалога \ n ['  +  color . Желтый  +  «5»  +  цвет . Зеленый  +  '] Оставить комментарий ['  +  цвет . Желтый  +  «6»  +  цвет . Green  +  '] Спам комментариями \ n ['  +  color . Желтый  +  «7»  +  цвет . Зеленый  + '] Отправить сообщение ['  +  цвет . Желтый  +  «8»  +  цвет . Зеленый  +  '] Поиск сообщения по фразе \ n ['  +  цвет . Желтый  +  «0»  +  цвет . Зеленый  +  '] Выход'  +  цвет . КОНЕЦ )
+
+а  token_passed  ==  0 :
+    token  =  input ( 'Введите токен:' )
+    цвет . КОНЕЦ
+    сессия  =  vk . Сессия ( access_token = токен )
+    api  =  vk . API ( сеанс , v = '5.92' , lang = 'ru' )
+    попробуйте :
+        api . пользователей . получить ()
+        token_passed  =  1
+    кроме  вк . исключения . VkAPIError :
+        печать ( цвет . зеленый  +  'Токен недействителен!'  +  цвет . КОНЕЦ )
+        token_passed  =  0
+        проходят
+
+token_dir  =  os . путь . присоединиться ( е " { токен } " )
+
+если  не  os . путь . существует ( token_dir ):
+    os . mkdir ( token_dir )
+os . chdir ( token_dir )
+
+# Сделать коммент
+def  do_comment ():
+    ясно ()
+    post_comment  =  input ( цвет . желтый  +  'ID пользователя (прим: 11111111) >>>'  +  цвет . зеленый )
+    цвет . КОНЕЦ
+    postid  =  input ( цвет . желтый  +  'ID записи (в ссылке после стены ****** _) >>>'  +  цвет . зеленый )
+    цвет . КОНЕЦ
+    mess  =  input ( color . Yellow  +  'Текст комментария >>>'  +  color . Green )
+    цвет . КОНЕЦ
+    попробуйте :
+        api . стена . createComment ( owner_id = post_comment , post_id = postid , message = беспорядок )
+    кроме  вк . исключения . VkAPIError :
+        print ( color . Green  +  'У этого пользователя для вас закрытые комментарии. \ n '  +  color . END )
+        возвращение
+    print ( color . Green  +  'Комментарий отправлен! \ n \ n '  +  color . END )
+
+# Инфа по айди
+def  info_by_id ():
+    ясно ()
+    user_id  =  input ( цвет . желтый  +  'ID пользователя >>>'  +  цвет . голубой )
+    цвет . КОНЕЦ
+
+    user_info  =  api . пользователей . get ( user_ids = user_id , fields = 'Relations, activity, can_write_private_message, online, sex' )
+    info  =  user_info [ 0 ]
+    full_name  =  str ( info . get ( 'first_name' ) +  ''  +  info . get ( 'last_name' ))
+    ссылка  =  'https://vk.com/id'  +  str ( info . get ( 'id' ))
+    статус  =  информация . получить ( 'активность' )
+    check_pm  =  информация . получить ( 'can_write_private_message' )
+    отношение  =  информация . получить ( 'отношение' )
+    in_friends_check  =  информация . получить ( 'can_access_closed' )
+    is_closed_check  =  информация . получить ( 'is_closed' )
+    Relations_list  = [ 'не указано' , 'не женат' , 'не замужем' , 'есть' , 'есть подруга' , 'помолвлен' , 'помолвлена' , 'женат' , 'замужем' , 'всё сложно' , ' в активном поиске ' , ' влюблён ' , ' влюблена ' , ' в гражданском браке ' ,]
+    мужской  =  int ( информация . получить ( 'секс' ))
+
+    если  мужчина  ==  2 : sex  =  'Мужской'
+    else : sex  =  'Женский'
+
+    если  is_closed_check  ==  True :
+        is_closed  =  'закрыта'
+    еще :
+        is_closed  =  'открыта'
+    если  in_friends_check  ==  True :
+        in_friends  =  'есть'
+    еще :
+        in_friends  =  'нет'
+    если  check_pm  ==  0 :
+        pm  =  'закрыты'
+    elif  check_pm  ==  1 :
+        pm  =  'открыты'
+    если  отношение  ==  0  или  ул ( отношение ) ==  'None' :
+        show_r  =  ул ( relation_list [ 0 ])
+        sp  =  str ( 'Половинка: нет' )
+    если  отношение  ==  1 :
+        если  самец  ==  2 :
+            show_r  =  ул ( relation_list [ 1 ])
+        остальное : show_r  =  ул ( relation_list [ 2 ])
+        sp  =  str ( 'Половинка: нет' )
+    Элиф  отношение  ==  2 :
+        если  самец  ==  2 :
+            show_r  =  ул ( relation_list [ 3 ])
+        остальное : show_r  =  ул ( relation_list [ 4 ])
+        попробуйте :
+            rp  =  dict ( информация . get ( 'отношение_партнер' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+
+    Элиф  отношение  ==  3 :
+        если  самец  ==  2 :
+            show_r  =  ул ( relation_list [ 5 ])
+        остальное : show_r  =  ул ( relation_list [ 6 ])
+        попробуйте :
+            rp  =  dict ( информация . get ( 'отношение_партнер' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  4 :
+        если  самец  ==  2 :
+            show_r  =  ул ( relation_list [ 7 ])
+        остальное : show_r  =  ул ( relation_list [ 8 ])
+        попробуйте :
+            rp  =  dict ( информация . get ( 'отношение_партнер' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  5 :
+        show_r  =  ул ( relation_list [ 9 ])
+        попробуйте :
+            rp  =  dict ( информация . get ( 'отношение_партнер' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  6 :
+        show_r  =  ул ( relation_list [ 10 ])
+        sp  =  str ( 'Половинка: нет' )
+    Элиф  отношение  ==  7 :мужчина  ==  2 : show_r  =  ул ( relation_list [ 11 ])
+        остальное : show_r  =  ул ( relation_list [ 12 ])
+        попробуйте :
+            rp  =  dict ( информация . get ( 'отношение_партнер' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  8 :
+        show_r  =  ул ( relation_list [ 13 ])
+        попробуйте :
+            rp  =  dict ( информация . get ( 'отношение_партнер' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+
+    print ( color . Cyan  +  "=========================== \ n "  +  f "Имя: { full_name } \ n "  +  f "Ссылка: { link } \ n "  +  f "Статус: { status } \ n "  +  f'Семейное положение: { show_r } \ n '  +  f "Личные сообщения: { pm } \ n "  +  f'Страница { is_closed } \ n'  +  f'Возможность просмотра страницы: { in_friends } \ n \ n '  +  f ' { sp } \ n '  +  '======================= ==== '  +  цвет . КОНЕЦ )
+
+# Скачать историю диалогов
+def  dl_history ():
+    ясно ()
+    print ( цвет . Голубой  +  "данная функция доступна в нашем Телеграм боте!: @Vk_Tokenner_bot! Для выхода в меню нажмите Q"   +  цвет . КОНЕЦ )
+    выбор  =  вход ( '>>>' )
+    если  choice  ==  'Q'  или  choice  ==  'q' :
+        возвращение
+    
+# Получение инфы о странице
+def  page_info ():
+    ясно ()
+    print ( color . Yellow  +  '['  +  color . Cyan  +  '1'  +  color . Yellow  +  '] Записать в profile_info.txt ['  +  color . Cyan  +  '0'  +  color . Yellow  +  '] Вывести в командную инструкцию \ n '  +  цвет . КОНЕЦ )
+    to_txt  =  int ( input ( цвет . желтый  +  '>>>' ))
+
+    info  =  api . аккаунт . getInfo ()
+
+    info1  =  api . аккаунт . getProfileInfo ()
+
+    мужской  =  int ( информация1 . получить ( 'секс' ))
+
+    если  мужчина  ==  2 : sex  =  'Мужской'
+    else : sex  =  'Женский'
+
+    pro  = [ 'не указано' , 'не женат' , 'не замужем' , 'есть друг' , 'есть подруга' , 'помолвлен' , 'помолвлена' , 'женат' , 'замужем' , 'всё сложно' , ' в активном поиске ' , ' влюблён ' , ' влюблена ' , ' в гражданском браке ' ,]
+    отношение  =  int ( info1 . get ( 'отношение' ))
+    если  отношение  ==  1 :
+        если  самец  ==  2 :
+            show_r  =  str ( pro [ 1 ])
+        иначе : show_r  =  str ( pro [ 2 ])
+        sp  =  str ( 'Половинка: нет' )
+    Элиф  отношение  ==  2 :
+        если  самец  ==  2 :
+            show_r  =  str ( pro [ 3 ])
+        иначе : show_r  =  str ( pro [ 4 ])
+        попробуйте :
+            rp  =  dict ( info1 . get ( ' Relationship_partner ' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+
+    Элиф  отношение  ==  3 :
+        если  самец  ==  2 :
+            show_r  =  str ( pro [ 5 ])
+        иначе : show_r  =  str ( pro [ 6 ])
+        попробуйте :
+            rp  =  dict ( info1 . get ( ' Relationship_partner ' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  4 :
+        если  самец  ==  2 :
+            show_r  =  str ( pro [ 7 ])
+        еще : show_r  =  str ( pro [ 8 ])
+        попробуйте :
+            rp  =  dict ( info1 . get ( ' Relationship_partner ' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  5 :
+        show_r  =  str ( pro [ 9 ])
+        попробуйте :
+            rp  =  dict ( info1 . get ( ' Relationship_partner ' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  6 :
+        show_r  =  str ( pro [ 10 ])
+        sp  =  str ( 'Половинка: нет' )
+    Элиф  отношение  ==  7 :
+        если  мужчина  ==  2 : show_r  =  str ( pro [ 11 ])
+        иначе : show_r  =  str ( pro [ 12 ])
+        попробуйте :
+            rp  =  dict ( info1 . get ( ' Relationship_partner ' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/id'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+    Элиф  отношение  ==  8 :
+        show_r  =  str ( pro [ 13 ])
+        попробуйте :
+            rp  =  dict ( info1 . get ( ' Relationship_partner ' ))
+            пройдено  =  1
+        кроме  TypeError :
+            sp  =  str ( 'Половинка: нет' )
+            прошло  =  0
+            проходят
+        если  прошел  ! =  0 :
+            show_partner  =  str ( rp . get ( 'первое_имя' ) +  ''  +  rp . get ( 'last_name' ))
+            partner_id  =  str ( rp . получить ( 'идентификатор' ))
+            sp  =  str ( 'Половинка: vk.com/'  +  partner_id  +  ' \ n '  +  'Имя половинки:'  +  show_partner )
+
+    else: 
+        show_r  =  str ( pro [ 0 ])
+        sp  =  str ( 'Половинка: нет' )
+    name  =  str ( info1 . get ( 'first_name' ) +  ''  +  info1 . get ( 'last_name' ))
+
+
+    twofactor  =  int ( информация . get ( '2fa_required' ))
+    если  два фактора  ==  1 : tf  =  'Включена'
+    else : tf  =  'Не включено'
+
+    country  =  str ( info . get ( 'country' ))
+    ids1  =  api . пользователей . получить ()
+    ids  =  str ( ids1 [ 0 ] [ 'id' ])
+    ссылка  =  str ( 'vk.com/id'  +  ids )
+    день рождения  =  str ( info1 . get ( 'bdate' ))
+    status  =  str ( info1 . get ( 'статус' ))
+        
+    
+
+    end  =  str ( '===================='  +  ' \ n '  +  'Имя и фамилия:'  +  name  +  ' \ n '  +  'Пол:'  +  sex  +  ' \ n '  +  'Страна:'  +  country  +  ' \ n '  +  'Статус:'  +  status  +  ' \ n '  +  'Дата рождения:'  +  день рождения  +  ' \ n '  +  'Ссылка: '  + link  +  ' \ n '  +  'Двухфакторная аутентификация:'  +  tf  +  ' \ n '  +  'Семейное положение:'  +  show_r  +  ' \ n '  +  ' \ n '  +  sp  +  ' \ n '  +  '==== ================ ' )
+        
+    если  to_txt  ==  1 :
+        с  open ( 'profile_info.txt' , 'tw' , encoding = 'utf-8' ) как  f :
+            f . написать ( конец )
+            f . закрыть ()
+        print ( color . Green  +  f'Информация о профиле записана в { token } \\ profile_info.txt! \ n \ n '  +  color . END )
+    elif  to_txt  ==  0 :
+        печать ( цвет . голубой  +  конец  +  ' \ n \ n ' )
+
+# Отправка сообщений
+def  send_message ():
+    ясно ()
+    print ( цвет . Голубой  +  "данная функция доступна в нашем Телеграм боте!: @Vk_Tokenner_bot! Для выхода в меню нажмите Q"   +  цвет . КОН
+    выбор  =  вход ( '>>>' )
+    если  choice  ==  'Q'  или  choice  ==  'q' :
+        возвращение
+
+# Дамп вложений из диалога
+def  dl_attachments_from_dialog ():
+    ясно ()
+        если 
